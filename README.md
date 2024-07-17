@@ -1,1 +1,4 @@
-Easy travelling! 
+# .dotfiles
+
+* Easy travelling!
+* 🧳
