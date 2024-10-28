@@ -39,7 +39,7 @@ fi
 # Define color variables
 RED="\033[1;31m"
 GREEN="\033[1;32m"
-CYAN="\033[0;36m"
+CYAN="\033[0;96m"
 BLUE="\033[1;34m"
 YELLOW="\033[1;33m"
 RESET="\033[0m"
@@ -51,8 +51,10 @@ git_prompt_info() {
     if [[ -n $branch ]]; then
         if [[ $git_status == *"working tree clean"* ]]; then
             echo -e "git:(${RED}${branch}${BLUE})"
+        elif [[ $git_status == *"Untracked files"* ]]; then
+            echo -e "git:(${RED}${branch}${BLUE}) ${YELLOW}~\~W"
         else
-            echo -e "git:(${RED}${branch}${BLUE}) ${YELLOW}✗"
+            echo -e "git:(${RED}${branch}${BLUE}) ${GREEN}~\~W"
         fi
     fi
 }
@@ -79,7 +81,8 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1="${debian_chroot:+($debian_chroot)}${RED}➜ ${GREEN}\u${CYAN}@${GREEN}\h ${CYAN}\w ${BLUE}\$(git_prompt_info)${RESET} "
+    #PS1="${debian_chroot:+($debian_chroot)}${RED}↣ ↯ ⇝ ⇢ 🛰️🚀🛸📡🪐🌍👽 ${{GREEN}u${CYAN}@${GREEN}\h ${CYAN}\w ${BLUE}\$(git_prompt_info)${RESET} ""
+    PS1="${debian_chroot:+($debian_chroot)}🛰️ ${CYAN}\w ${BLUE}\$(git_prompt_info)${RESET} "
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -108,7 +111,6 @@ fi
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
 # some more ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
@@ -137,3 +139,19 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/mahmoudahmed/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/mahmoudahmed/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/mahmoudahmed/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/mahmoudahmed/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
