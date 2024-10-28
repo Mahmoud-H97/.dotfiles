@@ -11,11 +11,11 @@ for_window [class="^.*"] client.focused          #77dd77 #285577 #ffffff #2e9ef4
 #windows key
 #set $mod Mod4 
 #ALT key
-set $mod Mod1  
+set $mod Mod1
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 15
+font pango:monospace 10
 
 # GET DEM BORDERS OUT OF HEREc:w
 #
@@ -57,7 +57,7 @@ floating_modifier $mod
 
 # move tiling windows via drag & drop by left-clicking into the title bar,
 # or left-clicking anywhere into the window while holding the floating modifier.
-tiling_drag modifier titlebar
+#tiling_drag modifier titlebar
 
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
@@ -203,7 +203,7 @@ bar {
 
 exec_always nitrogen --restore
 exec_always compton
-exec --no-startup-id compton -b -f 
+exec --no-startup-id compton -b -f
 
 # ------------------------------------------
 # CUSTOM KEYS START
@@ -224,3 +224,16 @@ bindsym <F5> exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 # # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
+
+
+# For exiting 
+
+mode "exit: [l]ogout, [r]eboot, [s]hutdown"{
+
+        bindsym l exec i3-msg exit
+        bindsym r exec systemctl reboot
+        bindsym s exec systemct shutdown
+        bindsym Escape mode "default"
+        bindsym Return mode "default"
+}
+bindsym $mod+x mode "exit: [l]ogout, [r]eboot, [s]hutdown"
