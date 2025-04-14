@@ -1,4 +1,3 @@
-
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -9,16 +8,109 @@ case $- in
       *) return;;
 esac
 
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
-HISTCONTROL=ignoreboth
+alias reit='echo "Hi, from the Research Engineering and Infrastructure Team!!!"'
+alias reit-update='wget https://gitlab.ewi.tudelft.nl/reit/shell-config/-/raw/main/.bashrc-reit?ref_type=heads -O ~/.bashrc-reit'
+alias reit-create-new-python-package='uvx copier copy git+https://gitlab.ewi.tudelft.nl/reit/python-package-template'
 
-# append to the history file, don't overwrite it
+# Alias
+alias ll='ls -alF'
+alias la='ls -A'
+alias ls='ls --color=auto'
+alias l='ls -rtlh --full-time --color=auto'
+alias md='mkdir'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias src='source ~/.bashrc'
+alias vim='nvim .'
+alias cls='clear'
+
+#kitty && kitten
+alias icat='kitten icat'
+
+## Conda
+alias ca='conda activate'
+alias cel='conda env list'
+alias cl='conda list'
+
+### Alias to install Miniconda via wget and bash script execution with conda as package manager
+alias install-miniconda='wget \
+    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-latest-Linux-x86_64.sh \
+    && eval "$($HOME/miniconda3/bin/conda shell.bash  hook)"\
+    && conda init'
+
+### Alias to install Miniforge via wget and bash script execution with mamba as package manager
+alias install-miniforge='
+    wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh \
+    && bash Miniforge3-Linux-x86_64.sh -b \
+    && rm -f Miniforge3-Linux-x86_64.sh \
+    && eval "$($HOME/miniforge3/bin/conda shell.bash hook)" \
+    && conda init \
+    && conda install -n base -c conda-forge mamba'
+
+### Alias to install Mircomamba dependency manager
+alias install-micromamba='"${SHELL}" <(curl -L micro.mamba.pm/install.sh)'
+
+### Alias to install Pixi dependency manager
+alias install-pixi='curl -fsSL https://pixi.sh/install.sh | bash'
+
+### Alias to install UV Python package manager
+alias install-uv='curl -LsSf https://astral.sh/uv/install.sh | sh'
+
+## Docker
+alias docker-stop-all='sudo docker stop $(sudo docker ps -a -q)'
+alias docker-rm-all='sudo docker rm $(sudo docker ps -a -q)'
+alias docker-ls='sudo docker container ls'
+alias docker-prune='sudo docker rm $(sudo docker images -q) -f && sudo docker system prune -f'
+
+
+# History
+## Append to the history file, don't overwrite it
 shopt -s histappend
+HISTSIZE=100000                                # Maximum number of lines kept in memory for the history list
+HISTFILESIZE=100000                            # Maximum number of lines saved in the history file
+export HISTIGNORE="ll:ls:la:cd*:[bf]g*:exit"   # List of patterns to ignore in history
+export HISTCONTROL=erasedups                   # Ignore duplicates and leading/trailing whitespace when adding to history
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+
+# Functions
+## Extract archives
+extract () {
+   if [ -f $1 ] ; then
+       case $1 in
+           *.tar.bz2)   tar xvjf $1    ;;
+           *.tar.gz)    tar xvzf $1    ;;
+           *.bz2)       bunzip2 $1     ;;
+           *.rar)       unrar x $1       ;;
+           *.gz)        gunzip $1      ;;
+           *.tar)       tar xvf $1     ;;
+           *.tbz2)      tar xvjf $1    ;;
+           *.tgz)       tar xvzf $1    ;;
+           *.zip)       unzip $1       ;;
+           *.Z)         uncompress $1  ;;
+           *.7z)        7z x $1        ;;
+           *)           echo "don't know how to extract '$1'..." ;;
+       esac
+   else
+       echo "'$1' is not a valid file!"
+   fi
+ }
+
+## ls with full path e.g. `lsd .` ->  /home/username/my/path/my-file.txt
+lsd() {
+  while [ $# -gt 0 ]; do
+  echo "`pwd`/$1"
+  shift
+  done
+}
+
+
+##Shell style
+
+## ls colors (readable ls colors)
+export LS_COLORS='rs=0:di=1;35:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lz=01;31:*.xz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.axa=00;36:*.oga=00;36:*.spx=00;36:*.xspf=00;36:*.las=00;36*.laz=00;36::';
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -36,6 +128,8 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
+##prompt style
+
 # Define color variables
 RED="\033[1;31m"
 GREEN="\033[1;32m"
@@ -52,9 +146,9 @@ git_prompt_info() {
         if [[ $git_status == *"working tree clean"* ]]; then
             echo -e "git:(${RED}${branch}${BLUE})"
         elif [[ $git_status == *"Untracked files"* ]]; then
-            echo -e "git:(${RED}${branch}${BLUE}) ${YELLOW}~\~W"
+            echo -e "git:(${RED}${branch}${BLUE}) ${YELLOW}\xe2\x9c\x98"
         else
-            echo -e "git:(${RED}${branch}${BLUE}) ${GREEN}~\~W"
+            echo -e "git:(${RED}${branch}${BLUE}) ${GREEN}\xe2\x9c\x98"
         fi
     fi
 }
@@ -155,3 +249,7 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+export PATH="/home/mahmoudahmed/unison/bin:$PATH"
+
+. "$HOME/.cargo/env"
